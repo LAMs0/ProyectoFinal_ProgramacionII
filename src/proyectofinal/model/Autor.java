@@ -14,13 +14,13 @@ public class Autor {
     private String nacionalidad;
     
     public Autor(){}
-    
+    //constructor
     public Autor (int id, String nombre, String nacionalidad ){
         this.id = id;
         this.nombre = nombre;
         this.nacionalidad = nacionalidad;
     }
-    
+    //getters y setters
     public int getId(){return id;}
     public void setId(int id){this.id = id;}
     public String getNombre(){return nombre;}

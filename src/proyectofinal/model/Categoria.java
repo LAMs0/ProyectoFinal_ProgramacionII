@@ -13,12 +13,12 @@ public class Categoria {
     private String nombre;
     
     public Categoria(){}
-    
+    //constructor
     public Categoria(int id, String nombre){
         this.id = id;
         this.nombre = nombre;
     }
-    
+    //getters y setters
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
     public String getNombre(){return nombre;}
