@@ -85,6 +85,15 @@ public class LibrosFrame extends JFrame {
         JButton btnEliminar = new JButton("Eliminar");
         btnEliminar.setBounds(350, 100, 120, 30);
         add(btnEliminar);
+        
+        JButton btnDestacados = new JButton("Libros Destacados");
+        btnDestacados.setBounds(50, 200, 160, 30); // ajusta posición
+        add(btnDestacados);
+
+        btnDestacados.addActionListener(e -> {
+            new LibrosDestacadosFrame();
+        });
+
 
         // ------------------------------------------------------------
         // BOTÓN FAVORITO (NUEVA FUNCIÓN DEL EXAMEN FINAL)
