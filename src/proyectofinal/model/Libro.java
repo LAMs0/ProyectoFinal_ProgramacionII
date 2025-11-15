@@ -15,17 +15,19 @@ public class Libro {
     private int categoriaId;
     private int anio;
     private int stock;
+    private boolean destacado;
     
     public Libro(){}
 
     //constructor
-    public Libro(int id, String titulo, int autorId, int categoriaId, int anio, int stock) {
+    public Libro(int id, String titulo, int autorId, int categoriaId, int anio, int stock, boolean destacado) {
         this.id = id;
         this.titulo = titulo;
         this.autorId = autorId;
         this.categoriaId = categoriaId;
         this.anio = anio;
         this.stock = stock;
+        this.destacado = destacado;
     }
     
     //getters y setters
@@ -75,6 +77,14 @@ public class Libro {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+    
+    public boolean isDestacado(){
+        return destacado;
+    }
+    
+    public void setDestacado(boolean destacado){
+        this.destacado = destacado;
     }
     
     
