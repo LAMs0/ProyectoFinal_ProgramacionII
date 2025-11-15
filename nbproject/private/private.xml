@@ -2,16 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/ui/MainMenuFrame.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/ui/AutoresFrame.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/ui/LibrosFrame.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/service/CategoriaService.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/dao/AutorDao.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/ui/CategoriasFrame.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/ui/LoginFrame.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/ui/AcercaDeFrame.java</file>
-            <file>file:/C:/Users/venga/OneDrive/Documentos/NetBeansProjects/proyectoFinal/src/proyectofinal/service/LibroService.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
