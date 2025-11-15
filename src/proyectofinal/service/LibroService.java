@@ -36,4 +36,12 @@ public class LibroService {
     public List<Libro> listarLibros(String filtro) {
         return dao.listar(filtro);
     }
+    
+    public boolean marcarFavorito(int id, boolean estado){
+        return dao.marcarFavorito(id, estado);
+    }
+    
+    public List<Libro>obtenerLibrosDestacados(){
+       return dao.listarDestacados();
+    }
 }
