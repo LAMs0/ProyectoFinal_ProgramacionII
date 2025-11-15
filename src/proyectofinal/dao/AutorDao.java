@@ -18,7 +18,7 @@ import java.util.List;
 public class AutorDao {
     
     public boolean insertar(Autor a){
-        String sql = "INSERT INTO autores (nombres, nacionalidad) VALUES (?, ?)";
+        String sql = "INSERT INTO autores (nombre, nacionalidad) VALUES (?, ?)";
         try (Connection con = dbConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)){
             ps.setString(1, a.getNombre());
