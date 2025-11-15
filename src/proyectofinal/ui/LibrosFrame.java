@@ -9,177 +9,274 @@ package proyectofinal.ui;
  * @author venga
  */
 import proyectofinal.model.Libro;
-import proyectofinal.model.Autor;
-import proyectofinal.model.Categoria;
 import proyectofinal.service.LibroService;
-import proyectofinal.service.AutorService;
-import proyectofinal.service.CategoriaService;
-import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class LibrosFrame extends JFrame {
-    private LibroService service = new LibroService();
-    private AutorService autorService = new AutorService();
-    private CategoriaService categoriaService = new CategoriaService();
 
-    private JTextField txtId = new JTextField(5);
-    private JTextField txtTitulo = new JTextField(20);
-    private JComboBox<ComboItem> cmbAutor = new JComboBox<>();
-    private JComboBox<ComboItem> cmbCategoria = new JComboBox<>();
-    private JTextField txtAnio = new JTextField(5);
-    private JTextField txtStock = new JTextField(5);
-    private JTextField txtFiltro = new JTextField(15);
+    private LibroService libroService = new LibroService();
 
-    private JButton btnNuevo = new JButton("Nuevo");
-    private JButton btnGuardar = new JButton("Guardar");
-    private JButton btnModificar = new JButton("Modificar");
-    private JButton btnEliminar = new JButton("Eliminar");
-    private JButton btnListar = new JButton("Listar");
-
-    private JTable tbl = new JTable();
-    private DefaultTableModel model;
+    private JTable tablaLibros;
+    private JTextField txtTitulo, txtAnio, txtStock, txtBuscar;
+    private JComboBox<String> cbAutor, cbCategoria;
 
     public LibrosFrame() {
-        setTitle("CRUD Libros");
-        setLayout(new BorderLayout());
 
-        JPanel form = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(6,6,6,6);
-        gbc.gridx = 0; gbc.gridy = 0; form.add(new JLabel("ID:"), gbc);
-        txtId.setEditable(false); gbc.gridx = 1; form.add(txtId, gbc);
-        gbc.gridx = 0; gbc.gridy = 1; form.add(new JLabel("Título:"), gbc);
-        gbc.gridx = 1; form.add(txtTitulo, gbc);
-        gbc.gridx = 0; gbc.gridy = 2; form.add(new JLabel("Autor:"), gbc);
-        gbc.gridx = 1; form.add(cmbAutor, gbc);
-        gbc.gridx = 0; gbc.gridy = 3; form.add(new JLabel("Categoría:"), gbc);
-        gbc.gridx = 1; form.add(cmbCategoria, gbc);
-        gbc.gridx = 0; gbc.gridy = 4; form.add(new JLabel("Año:"), gbc);
-        gbc.gridx = 1; form.add(txtAnio, gbc);
-        gbc.gridx = 0; gbc.gridy = 5; form.add(new JLabel("Stock:"), gbc);
-        gbc.gridx = 1; form.add(txtStock, gbc);
-
-        JPanel actions = new JPanel();
-        actions.add(btnNuevo); actions.add(btnGuardar); actions.add(btnModificar); actions.add(btnEliminar);
-
-        JPanel top = new JPanel(new BorderLayout());
-        JPanel filtroPanel = new JPanel();
-        filtroPanel.add(new JLabel("Buscar:")); filtroPanel.add(txtFiltro); filtroPanel.add(btnListar);
-
-        top.add(form, BorderLayout.CENTER);
-        top.add(actions, BorderLayout.SOUTH);
-        top.add(filtroPanel, BorderLayout.NORTH);
-
-        add(top, BorderLayout.NORTH);
-
-        model = new DefaultTableModel(new Object[]{"ID","Título","AutorID","CategoriaID","Año","Stock"}, 0) {
-            public boolean isCellEditable(int row, int column) { return false; }
-        };
-        tbl.setModel(model);
-        add(new JScrollPane(tbl), BorderLayout.CENTER);
-
-        btnNuevo.addActionListener(e -> limpiar());
-        btnGuardar.addActionListener(e -> guardar());
-        btnModificar.addActionListener(e -> modificar());
-        btnEliminar.addActionListener(e -> eliminar());
-        btnListar.addActionListener(e -> listar());
-
-        tbl.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = tbl.getSelectedRow();
-                if (row >= 0) {
-                    txtId.setText(model.getValueAt(row, 0).toString());
-                    txtTitulo.setText(model.getValueAt(row, 1).toString());
-                    selectComboByValue(cmbAutor, Integer.parseInt(model.getValueAt(row,2).toString()));
-                    selectComboByValue(cmbCategoria, Integer.parseInt(model.getValueAt(row,3).toString()));
-                    txtAnio.setText(model.getValueAt(row,4).toString());
-                    txtStock.setText(model.getValueAt(row,5).toString());
-                }
-            }
-        });
-
-        cargarCombos();
-        listar();
-
-        setSize(900,450);
+        setTitle("Gestión de Libros");
+        setSize(900, 600);
+        setLayout(null);
         setLocationRelativeTo(null);
+
+        // ------------------------------------------------------------
+        // CAMPOS DE FORMULARIO
+        // ------------------------------------------------------------
+        JLabel lblTitulo = new JLabel("Título:");
+        lblTitulo.setBounds(20, 20, 100, 25);
+        add(lblTitulo);
+
+        txtTitulo = new JTextField();
+        txtTitulo.setBounds(120, 20, 200, 25);
+        add(txtTitulo);
+
+        JLabel lblAutor = new JLabel("Autor ID:");
+        lblAutor.setBounds(20, 60, 100, 25);
+        add(lblAutor);
+
+        cbAutor = new JComboBox<>();
+        cbAutor.setBounds(120, 60, 200, 25);
+        add(cbAutor);
+
+        JLabel lblCategoria = new JLabel("Categoría ID:");
+        lblCategoria.setBounds(20, 100, 100, 25);
+        add(lblCategoria);
+
+        cbCategoria = new JComboBox<>();
+        cbCategoria.setBounds(120, 100, 200, 25);
+        add(cbCategoria);
+
+        JLabel lblAnio = new JLabel("Año:");
+        lblAnio.setBounds(20, 140, 100, 25);
+        add(lblAnio);
+
+        txtAnio = new JTextField();
+        txtAnio.setBounds(120, 140, 200, 25);
+        add(txtAnio);
+
+        JLabel lblStock = new JLabel("Stock:");
+        lblStock.setBounds(20, 180, 100, 25);
+        add(lblStock);
+
+        txtStock = new JTextField();
+        txtStock.setBounds(120, 180, 200, 25);
+        add(txtStock);
+                // ------------------------------------------------------------
+        // BOTONES CRUD
+        // ------------------------------------------------------------
+        JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.setBounds(350, 20, 120, 30);
+        add(btnGuardar);
+
+        JButton btnActualizar = new JButton("Actualizar");
+        btnActualizar.setBounds(350, 60, 120, 30);
+        add(btnActualizar);
+
+        JButton btnEliminar = new JButton("Eliminar");
+        btnEliminar.setBounds(350, 100, 120, 30);
+        add(btnEliminar);
+
+        // ------------------------------------------------------------
+        // BOTÓN FAVORITO (NUEVA FUNCIÓN DEL EXAMEN FINAL)
+        // ------------------------------------------------------------
+        JButton btnFavorito = new JButton("Marcar / Quitar Favorito");
+        btnFavorito.setBounds(500, 20, 200, 30);
+        add(btnFavorito);
+
+        // ------------------------------------------------------------
+        // BUSQUEDA
+        // ------------------------------------------------------------
+        JLabel lblBuscar = new JLabel("Buscar:");
+        lblBuscar.setBounds(500, 60, 100, 25);
+        add(lblBuscar);
+
+        txtBuscar = new JTextField();
+        txtBuscar.setBounds(560, 60, 180, 25);
+        add(txtBuscar);
+
+        JButton btnBuscar = new JButton("Filtrar");
+        btnBuscar.setBounds(560, 95, 100, 30);
+        add(btnBuscar);
+
+        // ------------------------------------------------------------
+        // TABLA
+        // ------------------------------------------------------------
+        tablaLibros = new JTable();
+        JScrollPane scroll = new JScrollPane(tablaLibros);
+        scroll.setBounds(20, 260, 850, 280);
+        add(scroll);
+
+        // ------------------------------------------------------------
+        // EVENTOS DE BOTONES
+        // ------------------------------------------------------------
+        btnGuardar.addActionListener(e -> guardarLibro());
+        btnActualizar.addActionListener(e -> actualizarLibro());
+        btnEliminar.addActionListener(e -> eliminarLibro());
+        btnBuscar.addActionListener(e -> cargarTabla());
+        btnFavorito.addActionListener(e -> marcarFavorito());
+
+        // Cargar datos iniciales
+        cargarTabla();
+
+        setVisible(true);
+    }
+    // ==============================================================
+    // GUARDAR LIBRO
+    // ==============================================================
+    private void guardarLibro() {
+        try {
+            Libro l = new Libro();
+            l.setTitulo(txtTitulo.getText());
+            l.setAutorId(Integer.parseInt(cbAutor.getSelectedItem().toString()));
+            l.setCategoriaId(Integer.parseInt(cbCategoria.getSelectedItem().toString()));
+            l.setAnio(Integer.parseInt(txtAnio.getText()));
+            l.setStock(Integer.parseInt(txtStock.getText()));
+            l.setDestacado(false); // nuevos libros no están destacados
+
+            if (libroService.crearLibro(l)) {
+                JOptionPane.showMessageDialog(this, "Libro registrado correctamente.");
+                cargarTabla();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al registrar libro.");
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Datos inválidos: " + ex.getMessage());
+        }
     }
 
-    private void cargarCombos() {
-        cmbAutor.removeAllItems();
-        cmbCategoria.removeAllItems();
-        List<Autor> autores = autorService.listarAutores("");
-        for (Autor a : autores) cmbAutor.addItem(new ComboItem(a.getId(), a.getNombre()));
-        List<Categoria> cats = categoriaService.listarCategorias("");
-        for (Categoria c : cats) cmbCategoria.addItem(new ComboItem(c.getId(), c.getNombre()));
+    // ==============================================================
+    // ACTUALIZAR LIBRO
+    // ==============================================================
+    private void actualizarLibro() {
+        int fila = tablaLibros.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un libro para actualizar.");
+            return;
+        }
+
+        try {
+            Libro l = new Libro();
+            l.setId((int) tablaLibros.getValueAt(fila, 0));
+            l.setTitulo(txtTitulo.getText());
+            l.setAutorId(Integer.parseInt(cbAutor.getSelectedItem().toString()));
+            l.setCategoriaId(Integer.parseInt(cbCategoria.getSelectedItem().toString()));
+            l.setAnio(Integer.parseInt(txtAnio.getText()));
+            l.setStock(Integer.parseInt(txtStock.getText()));
+
+            // recuperar estado actual
+            l.setDestacado((boolean) tablaLibros.getValueAt(fila, 6));
+
+            if (libroService.actualizarLibro(l)) {
+                JOptionPane.showMessageDialog(this, "Libro actualizado exitosamente.");
+                cargarTabla();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo actualizar el libro.");
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Datos inválidos. Revise los campos.");
+        }
     }
 
-    private void selectComboByValue(JComboBox<ComboItem> combo, int value) {
-        for (int i=0;i<combo.getItemCount();i++) {
-            if (combo.getItemAt(i).getId() == value) {
-                combo.setSelectedIndex(i); return;
+    // ==============================================================
+    // ELIMINAR LIBRO
+    // ==============================================================
+    private void eliminarLibro() {
+        int fila = tablaLibros.getSelectedRow();
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un libro para eliminar.");
+            return;
+        }
+
+        int id = (int) tablaLibros.getValueAt(fila, 0);
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Eliminar este libro?", "Confirmar", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (libroService.eliminarLibro(id)) {
+                JOptionPane.showMessageDialog(this, "Libro eliminado.");
+                cargarTabla();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el libro.");
             }
         }
     }
 
-    private void limpiar() {
-        txtId.setText(""); txtTitulo.setText(""); txtAnio.setText(""); txtStock.setText("");
-        if (cmbAutor.getItemCount()>0) cmbAutor.setSelectedIndex(0);
-        if (cmbCategoria.getItemCount()>0) cmbCategoria.setSelectedIndex(0);
-    }
+    // ==============================================================
+    // MARCAR / QUITAR FAVORITO
+    // ==============================================================
+    private void marcarFavorito() {
+        int fila = tablaLibros.getSelectedRow();
 
-    private void guardar() {
-        String titulo = txtTitulo.getText().trim();
-        if (titulo.isEmpty()) { JOptionPane.showMessageDialog(this, "Título obligatorio"); return; }
-        int autorId = cmbAutor.getSelectedItem() == null ? 0 : ((ComboItem)cmbAutor.getSelectedItem()).getId();
-        int catId = cmbCategoria.getSelectedItem() == null ? 0 : ((ComboItem)cmbCategoria.getSelectedItem()).getId();
-        int anio = 0, stock = 0;
-        try { anio = Integer.parseInt(txtAnio.getText().trim().isEmpty() ? "0" : txtAnio.getText().trim()); } catch (NumberFormatException e) { JOptionPane.showMessageDialog(this, "Año inválido"); return; }
-        try { stock = Integer.parseInt(txtStock.getText().trim().isEmpty() ? "0" : txtStock.getText().trim()); } catch (NumberFormatException e) { JOptionPane.showMessageDialog(this, "Stock inválido"); return; }
-        Libro l = new Libro();
-        l.setTitulo(titulo); l.setAutorId(autorId); l.setCategoriaId(catId); l.setAnio(anio); l.setStock(stock);
-        if (service.crearLibro(l)) { JOptionPane.showMessageDialog(this, "Libro guardado"); listar(); limpiar(); } else JOptionPane.showMessageDialog(this, "Error al guardar");
-    }
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un libro.");
+            return;
+        }
 
-    private void modificar() {
-        if (txtId.getText().trim().isEmpty()) { JOptionPane.showMessageDialog(this, "Seleccione un libro"); return; }
-        int id = Integer.parseInt(txtId.getText().trim());
-        String titulo = txtTitulo.getText().trim();
-        if (titulo.isEmpty()) { JOptionPane.showMessageDialog(this, "Título obligatorio"); return; }
-        int autorId = cmbAutor.getSelectedItem() == null ? 0 : ((ComboItem)cmbAutor.getSelectedItem()).getId();
-        int catId = cmbCategoria.getSelectedItem() == null ? 0 : ((ComboItem)cmbCategoria.getSelectedItem()).getId();
-        int anio = 0, stock = 0;
-        try { anio = Integer.parseInt(txtAnio.getText().trim().isEmpty() ? "0" : txtAnio.getText().trim()); } catch (NumberFormatException e) { JOptionPane.showMessageDialog(this, "Año inválido"); return; }
-        try { stock = Integer.parseInt(txtStock.getText().trim().isEmpty() ? "0" : txtStock.getText().trim()); } catch (NumberFormatException e) { JOptionPane.showMessageDialog(this, "Stock inválido"); return; }
-        Libro l = new Libro(id, titulo, autorId, catId, anio, stock);
-        if (service.actualizarLibro(l)) { JOptionPane.showMessageDialog(this, "Libro actualizado"); listar(); limpiar(); } else JOptionPane.showMessageDialog(this, "Error al actualizar");
-    }
+        int id = (int) tablaLibros.getValueAt(fila, 0);
+        boolean estadoActual = (boolean) tablaLibros.getValueAt(fila, 6);
 
-    private void eliminar() {
-        if (txtId.getText().trim().isEmpty()) { JOptionPane.showMessageDialog(this, "Seleccione un libro"); return; }
-        int id = Integer.parseInt(txtId.getText().trim());
-        int r = JOptionPane.showConfirmDialog(this, "¿Confirmar eliminación?", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (r == JOptionPane.YES_OPTION) {
-            if (service.eliminarLibro(id)) { JOptionPane.showMessageDialog(this, "Libro eliminado"); listar(); limpiar(); } else JOptionPane.showMessageDialog(this, "Error al eliminar");
+        boolean nuevoEstado = !estadoActual;
+
+        if (libroService.marcarFavorito(id, nuevoEstado)) {
+            JOptionPane.showMessageDialog(this,
+                    nuevoEstado ? "Libro agregado a favoritos." : "Libro removido de favoritos.");
+            cargarTabla();
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al actualizar favorito.");
         }
     }
 
-    private void listar() {
-        String filtro = txtFiltro.getText().trim();
-        List<Libro> lista = service.listarLibros(filtro);
-        model.setRowCount(0);
+    // ==============================================================
+    // CARGAR TABLA COMPLETA
+    // ==============================================================
+    private void cargarTabla() {
+
+        List<Libro> lista = libroService.listarLibros(
+                txtBuscar != null ? txtBuscar.getText() : ""
+        );
+
+        DefaultTableModel modelo = new DefaultTableModel(
+                new Object[]{"ID", "Título", "Autor ID", "Categoría ID", "Año", "Stock", "Favorito"}, 0) {
+
+            @Override
+            public Class<?> getColumnClass(int column) {
+                return column == 6 ? Boolean.class : String.class;
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
         for (Libro l : lista) {
-            model.addRow(new Object[]{l.getId(), l.getTitulo(), l.getAutorId(), l.getCategoriaId(), l.getAnio(), l.getStock()});
+            modelo.addRow(new Object[]{
+                    l.getId(),
+                    l.getTitulo(),
+                    l.getAutorId(),
+                    l.getCategoriaId(),
+                    l.getAnio(),
+                    l.getStock(),
+                    l.isDestacado()
+            });
         }
-    }
 
-    // helper para combo
-    private static class ComboItem {
-        private int id; private String value;
-        public ComboItem(int id, String value) { this.id = id; this.value = value; }
-        public int getId() { return id; }
-        public String toString() { return value; }
+        tablaLibros.setModel(modelo);
     }
 }
+
+
