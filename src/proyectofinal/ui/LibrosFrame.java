@@ -87,7 +87,7 @@ public class LibrosFrame extends JFrame {
         add(btnEliminar);
         
         JButton btnDestacados = new JButton("Libros Destacados");
-        btnDestacados.setBounds(50, 200, 160, 30); // ajusta posición
+        btnDestacados.setBounds(350, 200, 160, 30);
         add(btnDestacados);
 
         btnDestacados.addActionListener(e -> {
